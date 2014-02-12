@@ -1,9 +1,9 @@
 {
-    "name": "mpoiriert/consolable-bundle",
+    "name": "mpoiriert/nucleus-console-bundle",
     "type": "library",
     "minimum-stability": "dev",
-    "description": "Reusable library",
-    "keywords": ["library","console","bundel","symfony","nucleus"],
+    "description": "Allow to create a command with a annotation on a service method",
+    "keywords": ["library","console","bundle","symfony","nucleus","annotation"],
     "license": "MIT",
     "authors": [
         {
