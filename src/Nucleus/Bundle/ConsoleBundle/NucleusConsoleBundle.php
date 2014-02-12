@@ -2,6 +2,7 @@
 
 namespace Nucleus\Bundle\ConsoleBundle;
 
+use Nucleus\Bundle\ConsoleBundle\DependencyInjection\CommandLineAnnotationContainerGenerator;
 use Nucleus\Bundle\ConsoleBundle\ServiceCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -13,16 +14,14 @@ class NucleusConsoleBundle extends Bundle
     {
         parent::registerCommands($application);
 
+
+
         if(!method_exists($application,'getKernel')) {
             return;
         }
 
         $container = $application->getKernel()->getContainer();
-        $commands = $container->getParameter('nucleus.console.commands');
-
-        if(!$commands) {
-            $commands = array();
-        }
+        $commands = $container->getParameter(CommandLineAnnotationContainerGenerator::CONTAINER_COMMANDS_PARAMETER);
 
         foreach($commands as $commandParameter) {
             $command = new ServiceCommand(

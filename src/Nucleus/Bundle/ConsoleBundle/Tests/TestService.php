@@ -10,12 +10,16 @@ use Symfony\Component\Console\Output\Output;
  * @author AxelBarbier
  */
 class TestService {
+
     /**
-     * Comment from the function 
+     * Comment from the method
+     *
      * @\Nucleus\Console\CommandLine
+     * @param string $name The name of the person you want to say hello to
+     * @param Output $output
      */
     public function hello($name, Output $output)
     {
-        $output->writeln('Hello ' . $name . ' !');
+        $output->write('Hello ' . $name . ' !');
     }
 }

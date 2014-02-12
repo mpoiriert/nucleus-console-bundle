@@ -4,9 +4,6 @@ namespace Nucleus\Bundle\ConsoleBundle\DependencyInjection;
 
 use Nucleus\Bundle\CoreBundle\DependencyInjection\GenerationContext;
 use Nucleus\Bundle\CoreBundle\DependencyInjection\IAnnotationContainerGenerator;
-use Sami\Parser\DocBlockParser;
-use Symfony\Component\DependencyInjection\Definition;
-use Nucleus\Invoker\IInvoker;
 
 /**
  * @author AxelBarbier
@@ -14,30 +11,34 @@ use Nucleus\Invoker\IInvoker;
  */
 class CommandLineAnnotationContainerGenerator implements IAnnotationContainerGenerator
 {
+    const CONTAINER_COMMANDS_PARAMETER = 'nucleus.console.commands';
+
     public function processContainerBuilder(GenerationContext $context)
     {
         $annotation = $context->getAnnotation();
 
         /* @var $annotation \Nucleus\Console\CommandLine */
-        $docParser      = new DocBlockParser();
         $serviceName    = $context->getServiceName();
         $methodName     = $context->getParsingContextName();
         $definition     = $context->getContainerBuilder()->getDefinition($serviceName);
         $shortDesc      = 'N/A';
         $reflectedMethod = new \ReflectionMethod($definition->getClass(), $methodName);
         $methodComment = $reflectedMethod->getDocComment();
+        $paramArrayComments = array();
         
         if ($methodComment !== false) {
-            $docMethod = $docParser->parse($methodComment);
-            $shortDesc  = $docMethod->getShortDesc();
+            list($shortDesc, $paramArrayComments) = $this->parseBlockDocComment($methodComment);
         }
+
         $paramsArray = array();
-        $paramArrayComments = self::extractParamDocComment($docMethod->getTag('param'));
-        
+
         foreach($reflectedMethod->getParameters() as $reflectionParameter){
+            if($reflectionParameter->getClass()) {
+                continue;
+            }
             $paramComment = 'N/A';
             if(isset($paramArrayComments[$reflectionParameter->getName()])){
-                $paramComment = $paramArrayComments[$reflectionParameter->getName()]['comment'];
+                $paramComment = $paramArrayComments[$reflectionParameter->getName()];
             }
             
             $paramsArray[$reflectionParameter->getName()]['optional'] = false;
@@ -52,29 +53,53 @@ class CommandLineAnnotationContainerGenerator implements IAnnotationContainerGen
             $name = $serviceName.':'.$methodName;
         }
 
-        $commands = array();// $context->getContainerBuilder()->getParameter('nucleus.console.commands');
-        if(!$commands) {
+        if($context->getContainerBuilder()->hasParameter(self::CONTAINER_COMMANDS_PARAMETER)) {
+            $commands = $context->getContainerBuilder()->getParameter(self::CONTAINER_COMMANDS_PARAMETER);
+        } else {
             $commands = array();
         }
+
         $commands[] = compact('name','shortDesc','paramsArray','serviceName','methodName');
-        $context->getContainerBuilder()->setParameter('nucleus.console.commands', $commands);
+        $context->getContainerBuilder()->setParameter(self::CONTAINER_COMMANDS_PARAMETER, $commands);
     }
-    
-    private function extractParamDocComment($tagArray){
-        $paramArray = array();
-        if(!is_array($tagArray)){
-            return false;
-        }
-        foreach($tagArray as $tag){
-            if(is_array($tag)){
-                $paramArray[$tag[1]] = array();
-                if(isset($tag[2]) && !empty($tag[2]))
-                    $paramArray[$tag[1]]['comment'] = $tag[2];
-                else
-                    $paramArray[$tag[1]]['comment'] = 'N/A';
+
+    static public function parseBlockDocComment($comment)
+    {
+        $comment = preg_replace(array('#^/\*\*\s*#', '#\s*\*/$#', '#^\s*\*#m'), '', trim($comment));
+        $comment = "\n".preg_replace('/(\r\n|\r)/', "\n", $comment);
+
+        $short = '';
+        if (preg_match('/(.*?)(\n[ \t]*@([^ ]+)(?:\s+(.*?))?(?=(\n[ \t]*@|\s*$))|$)/As', $comment, $match)) {
+            $comment = substr($comment,strlen($match[1]));
+            $short = trim($match[1]);
+            $long = '';
+
+            // short desc ends at the first dot or when \n\n occurs
+            if (preg_match('/(.*?)(\.\s|\n\n|$)/s', $short, $match)) {
+                $long = trim(substr($short, strlen($match[0])));
+                $short = trim($match[0]);
             }
         }
-        return $paramArray;
+
+        $parameters = array();
+
+        while(preg_match('(@param.*|\s$)', $comment, $match)) {
+            $comment = str_replace($match[0],'',$comment);
+            @list(,,$parameterName,$parameterDescription) = explode(' ',$match[0],4);
+            if($parameterName) {
+                if(!$parameterDescription) {
+                    $parameterDescription = 'N/A';
+                }
+                $parameters[substr($parameterName,1)] = $parameterDescription;
+            }
+            $match = array();
+        }
+
+        if(empty($short)) {
+            $short = 'N/A';
+        }
+
+        return array($short, $parameters);
     }
 }
 

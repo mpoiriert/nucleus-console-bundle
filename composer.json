@@ -19,8 +19,7 @@
     "require": {
         "php": ">=5.3",
         "symfony/framework-bundle": "~2.4",
-        "mpoiriert/nucleus-bundle": "*",
-        "sami/sami":"1.0"
+        "mpoiriert/nucleus-bundle": "*"
     },
     "autoload": {
         "psr-0": {

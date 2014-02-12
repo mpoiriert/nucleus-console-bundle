@@ -1,10 +1,7 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 namespace Nucleus\Bundle\ConsoleBundle;
+
 use Nucleus\Invoker\IInvoker;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\ConsoleBundle;
@@ -17,6 +14,7 @@ use Symfony\Component\Console\Input\InputOption;
  * Description of ServiceCommand
  *
  * @author AxelBarbier
+ * @author Martin Poirier Theoret <mpoiriert@gmail.com>
  */
 class ServiceCommand extends Command
 {
@@ -33,10 +31,13 @@ class ServiceCommand extends Command
 
 
     /**
-     * 
      * @param string $name
      * @param string $shortDesc
      * @param array $paramsArray
+     * @param string $serviceName
+     * @param string $serviceMethod
+     * @param IInvoker $invoker
+     * @param ContainerInterface $container
      */
     public function __construct(
         $name,
@@ -85,6 +86,7 @@ class ServiceCommand extends Command
 
         $parameters[] = $input;
         $parameters[] = $output;
+        $parameters[] = $this;
 
         $this->invoker->invoke(
             array($this->container->get($this->serviceName),$this->serviceMethod),
