@@ -1,6 +1,6 @@
 {
     "name": "mpoiriert/nucleus-console-bundle",
-    "type": "library",
+    "type": "symfony-bundle",
     "minimum-stability": "dev",
     "description": "Allow to create a command with a annotation on a service method",
     "keywords": ["library","console","bundle","symfony","nucleus","annotation"],
@@ -23,8 +23,8 @@
     },
     "autoload": {
         "psr-0": {
-            "Nucleus\\Bundle\\ConsoleBundle": "src/",
-            "Nucleus\\Console": "src/"
+            "Nucleus\\Bundle\\ConsoleBundle": "",
+            "Nucleus\\Console": ""
         }
     }
 }
