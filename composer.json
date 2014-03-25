@@ -23,8 +23,8 @@
     },
     "autoload": {
         "psr-0": {
-            "Nucleus\\Bundle\\ConsoleBundle": "",
-            "Nucleus\\Console": ""
+            "Nucleus\\Bundle\\ConsoleBundle": ""
         }
-    }
+    },
+    "target-dir": "Nucleus/Bundle/ConsoleBundle"
 }

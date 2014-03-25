@@ -34,8 +34,8 @@ class NucleusConsoleExtension extends Extension implements PrependExtensionInter
             'nucleus_core',
             array(
                 'annotation_container_generators' => array(
-                    'bound' => array(
-                        'annotationClass' => 'Nucleus\Console\CommandLine',
+                    'nucleus_console.command' => array(
+                        'annotationClass' => 'Nucleus\Bundle\ConsoleBundle\Command\CommandLine',
                         'generatorClass' => 'Nucleus\Bundle\ConsoleBundle\DependencyInjection\CommandLineAnnotationContainerGenerator'
                     ),
                 )

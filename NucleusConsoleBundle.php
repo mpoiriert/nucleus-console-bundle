@@ -2,8 +2,8 @@
 
 namespace Nucleus\Bundle\ConsoleBundle;
 
+use Nucleus\Bundle\ConsoleBundle\Command\ServiceCommand;
 use Nucleus\Bundle\ConsoleBundle\DependencyInjection\CommandLineAnnotationContainerGenerator;
-use Nucleus\Bundle\ConsoleBundle\ServiceCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Nucleus\Invoker\IInvoker;
@@ -13,8 +13,6 @@ class NucleusConsoleBundle extends Bundle
     public function registerCommands(Application $application)
     {
         parent::registerCommands($application);
-
-
 
         if(!method_exists($application,'getKernel')) {
             return;

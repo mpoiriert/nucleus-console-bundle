@@ -14,7 +14,7 @@ class TestService
     /**
      * Comment from the method
      *
-     * @\Nucleus\Console\CommandLine
+     * @\Nucleus\Bundle\ConsoleBundle\Command\CommandLine
      *
      * @param string $name The name of the person you want to say hello to
      * @param OutputInterface $output

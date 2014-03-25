@@ -1,6 +1,6 @@
 <?php
 
-namespace Nucleus\Bundle\ConsoleBundle;
+namespace Nucleus\Bundle\ConsoleBundle\Command;
 
 use Nucleus\Invoker\IInvoker;
 use Symfony\Component\Console\Command\Command;

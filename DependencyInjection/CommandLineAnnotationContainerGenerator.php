@@ -17,7 +17,7 @@ class CommandLineAnnotationContainerGenerator implements IAnnotationContainerGen
     {
         $annotation = $context->getAnnotation();
 
-        /* @var $annotation \Nucleus\Console\CommandLine */
+        /* @var $annotation \Nucleus\Bundle\ConsoleBundle\Command\CommandLine */
         $serviceName    = $context->getServiceName();
         $methodName     = $context->getParsingContextName();
         $definition     = $context->getContainerBuilder()->getDefinition($serviceName);
