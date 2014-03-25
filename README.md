@@ -1,6 +1,8 @@
 nucleus-console-bundle
 ======================
 
+[![Build Status](https://api.travis-ci.org/mpoiriert/nucleus-console-bundle.png?branch=master)](http://travis-ci.org/nucleus-console-bundle)
+
 Using a annotation above a service method you are able to create a command accessible from the CLI.
 
 To use it in your application you must register 2 bundles since there is a dependency on [nucleus-bundle](https://github.com/mpoiriert/nucleus-bundle).
